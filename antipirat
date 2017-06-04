@@ -1,0 +1,109 @@
+#!/usr/bin/env python
+
+##
+#   ISA Projekt
+#   Bittorrent protokol
+#   xbenom01 2015/2016
+##
+import sys
+
+import RSSparse
+import TORparse
+import TRKparse
+import Utility
+
+##########################################################################
+
+
+def main():
+    HELPMSG = "Usage:\n"
+    HELPMSG += "./antipirat (-r url|-i filename|-t filename) [-a url]"
+    progargs = Utility.parseArgs()
+
+    modeset = False
+    if (progargs.r is not None):
+        r = progargs.r
+        modeset = True
+    else:
+        r = ""
+
+    if (progargs.i is not None):
+        if (modeset is True):
+            sys.stderr.write("Incorrect Arguments: multiple modes set!")
+            sys.exit(1)
+        i = progargs.i
+        modeset = True
+    else:
+        i = ""
+
+    if (progargs.a is not None):
+        a = progargs.a
+    else:
+        a = ""
+
+    if (progargs.t is not None):
+        if (modeset is True):
+            sys.stderr.write("Incorrect Arguments: multiple modes set!")
+            sys.exit(1)
+        t = progargs.t
+        modeset = True
+    else:
+        t = ""
+
+    if (progargs.help is not None):
+        if len(sys.argv) > 2:
+            sys.stderr.write("Incorrect Arguments: help must be used solely")
+            sys.exit(1)
+        sys.stdout.write(HELPMSG)
+        sys.exit(1)
+
+    if (modeset is False):
+        print(HELPMSG)
+        sys.exit(1)
+
+# print("R parameter: " + r)
+# print("I parameter: " + i)
+# print("A parameter: " + a)
+# print("T parameter: " + t)
+
+    ##
+    #   RSS
+    #
+    if (r != ""):
+        try:
+            rssfeed = RSSparse.getRSSFeed(r)
+        except ValueError:
+            sys.stderr.write("Invalid url: " + r)
+            sys.exit(1)
+
+        RSSparse.genList(rssfeed)
+
+    if (i != ""):
+    	rssfeed = Utility.openFile(i)
+        RSSparse.genList(rssfeed)
+
+    ##
+    #   TORRENT
+    #   
+    if (t != ""):
+        torrdata = TORparse.openTorrent(t)
+    else:
+        torrlink = RSSparse.getLink(rssfeed)
+        torrdata = TORparse.getTorrent(torrlink)
+
+    ##
+    #   TRACKER
+    #
+    if (a != ""):
+        announce = a
+    else:
+        announce = ""
+
+    ##
+    #   PEERS
+    #
+    TRKparse.getPeerList(torrdata, announce)
+
+##########################################################################
+if __name__ == "__main__":
+    main()

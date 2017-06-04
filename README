@@ -1,0 +1,34 @@
+Program je určený ku sledovaniu RSS feedu a zaznamenávanie všetkých peerov v danom torrent súbore.
+
+Použitie:
+./antipirat (-r url|-i filename|-t filename) [-a url]
+	-r špecifikuje url adresu z ktorej prevziať RSS súbor
+	-i špecifikuje lokáciu z ktorej otvoriť RSS súbor
+	-a špecifikuje URL trackeru z ktorého zisťovať peerlist
+	-t lokácia torrent súboru pre manuálne získanie peerlistu
+	-h nápoveda
+
+Rozšírenia:
+Paramerer -t
+
+Archív:
+antipirat
+Utility.py
+TRKparse.py
+TORparse.py
+RSSparse.py
+README
+Makefile
+manual.pdf
+test_files/
+test_files/pers.xml
+test_files/example.xml
+test_files/unregistered.xml
+bencode.py
+BTL.py
+
+Testovanie:
+make test
+
+
+
